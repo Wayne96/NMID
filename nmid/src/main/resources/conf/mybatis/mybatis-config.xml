@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration   PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+	   <setting name="mapUnderscoreToCamelCase" value="true"/>
+   </settings>
+	<typeAliases>
+		<typeAlias alias="Blog" type="cqupt.nmid.home.model.BlogModel" />
+		<typeAlias alias="HotBlog" type="cqupt.nmid.home.model.json.HotBlogModel" />
+		<typeAlias alias="Work" type="cqupt.nmid.home.model.WorkModel" />
+		<typeAlias alias="Tag" type="cqupt.nmid.home.model.TagModel" />
+		<typeAlias alias="User" type="cqupt.nmid.home.model.UserModel"/>
+		<typeAlias alias="UserBase" type="cqupt.nmid.home.model.json.UserBaseModel"/>
+		<typeAlias alias="News" type="cqupt.nmid.home.model.NewsModel"/>
+		<typeAlias alias="Resume" type="cqupt.nmid.home.model.ResumeModel"/>
+		<typeAlias alias="History" type="cqupt.nmid.home.model.HistoryModel"/>
+		<typeAlias alias="File" type="cqupt.nmid.home.model.FileModel"/>
+	</typeAliases>
+</configuration>  

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cqupt.nmid.home.dao.impl.mybatis.FileMapper">
+    
+    <insert id="uploadCommonFile" parameterType="java.util.List" >
+    	insert into nmid_file (upload,type,size) values
+    	<foreach collection="list" item="file" index="index" separator=",">
+    		 (#{file.upload},#{file.type},#{file.size})  
+    	</foreach>
+    </insert>
+</mapper>

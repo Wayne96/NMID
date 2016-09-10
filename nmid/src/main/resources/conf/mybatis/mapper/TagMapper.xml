@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cqupt.nmid.home.dao.impl.mybatis.TagMapper">
+    <select id="getTagsByBlogId" resultType="Tag">
+        SELECT tag.tag_id,name,num FROM nmid_tag tag,nmid_tag_map map WHERE blog_id=#{id} AND tag.tag_id=map.tag_id
+    </select>
+    <select id="getFrequentlyTags" resultType="Tag">
+        SELECT * FROM nmid_tag ORDER BY num DESC LIMIT #{size}
+    </select>
+    <select id="getTagById" resultType="Tag">
+        SELECT * FROM nmid_tag WHERE tag_id=#{id}
+    </select>
+</mapper>

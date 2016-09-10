@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cqupt.nmid.home.dao.impl.mybatis.ResumeMapper">
+    <select id="getResumeById" resultType="java.util.HashMap">
+		SELECT r.key,r.value,r.resume_id FROM nmid_resume r where r.user_id = #{userId}
+    </select>
+    
+    <select id="getUserIdByName" resultType="java.lang.Integer">
+    	SELECT id from nmid_user where name = #{name}
+    </select>
+    
+    <insert id="addResume" parameterType="java.util.List" >
+    	insert into nmid_resume (user_id,`key`,`value`) values
+    	<foreach collection="list" item="resume" index="index" separator=",">
+    		 (#{resume.userId},#{resume.key},#{resume.value})  
+    	</foreach>
+    </insert>
+    <delete id="deleteResume" >
+    	delete from nmid_resume where resume_id = #{resumeId} and user_id = #{userId}
+    </delete>
+    
+    <update id="updateResume" parameterType="Resume">
+    	update nmid_resume set `key` = #{key} , `value` = #{value} where resume_id = #{resumeId} and user_id = #{userId}
+    </update>
+</mapper>

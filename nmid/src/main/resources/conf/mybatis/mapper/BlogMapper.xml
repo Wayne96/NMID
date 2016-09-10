@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cqupt.nmid.home.dao.impl.mybatis.BlogMapper">
+
+	<select id="getBlogList" resultType="Blog">
+		SELECT * FROM nmid_blog WHERE state=1 AND  blog_id
+		<if test='order == "desc"'> &lt;= </if>
+		<if test='order == "asc"'> &gt;= </if>
+		(SELECT blog_id FROM nmid_blog WHERE state=1 ORDER BY blog_id ${order} LIMIT
+		#{offset},1 )
+		<if test="sort_by!=null and order!=null">ORDER BY ${sort_by} ${order}</if>
+		LIMIT #{size}
+	</select>
+
+	<select id="getBlog" resultType="Blog">
+		SELECT * FROM nmid_blog WHERE blog_id=#{id}
+	</select>
+	<select id="getBlogNum" resultType="int">
+		SELECT COUNT(*) FROM nmid_blog
+	</select>
+	<select id="getBlogListByTag" resultType="Blog">
+		SELECT blog.* FROM nmid_blog blog,nmid_tag_map map WHERE
+		map.blog_id=blog.blog_id AND tag_id=#{tagId} AND state=1
+		<if test="sortBy!=null and order!=null">ORDER BY ${sortBy} ${order}</if>
+		LIMIT #{index},#{size}
+	</select>
+	<update id="increaseBlogPv">
+		UPDATE nmid_blog SET pv=pv+1 WHERE blog_id=#{id}
+	</update>
+	<select id="getTopBlogs" resultType="HotBlog">
+		SELECT * FROM nmid_blog ORDER BY pv DESC LIMIT #{size}
+	</select>
+	<select id="getUserHotBlogs" resultType="HotBlog">
+		SELECT * FROM nmid_blog WHERE author_id=#{id} ORDER BY pv DESC LIMIT #{size}
+	</select>
+	<select id="getBlogsByKey" resultType="Blog">
+        SELECT * FROM nmid_blog WHERE title LIKE #{key} LIMIT 10
+	</select>
+	
+	<update id="updateBlog" parameterType="Blog">
+	   UPDATE nmid_blog
+	   <set>
+	      <if test="title!=null">title=#{title},</if>
+	      <if test="illustartion!=null">illustartion=#{illustartion},</if>
+	      <if test="platform!=0">platform=#{platform},</if>
+	      <if test="content!=null">content=#{content},</if>
+	      <if test="profile!=null">profile=#{profile}</if>
+	      <if test="state!=null">state=#{state}</if>
+	   </set>
+       WHERE blog_id=#{blogId}
+	</update>
+	
+	<delete id="deleteBlog">
+	   DELETE FROM nmid_blog WHERE blog_id=#{id}
+	</delete>
+	
+	<insert id="insertBlog" parameterType="Blog" useGeneratedKeys="true" keyProperty="blogId">
+	   INSERT INTO 
+	   nmid_blog(title,illustartion,author_id,time,platform,content,profile,state)
+	   VALUES(#{title},#{illustartion},#{authorId},#{time},#{platform},#{content},#{profile},#{state})
+	</insert>
+</mapper>

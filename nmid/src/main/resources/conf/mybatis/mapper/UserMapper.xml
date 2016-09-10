@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cqupt.nmid.home.dao.impl.mybatis.UserMapper">
+    <!-- <select id="getPublicNews" resultType="java.util.HashMap">
+        SELECT * FROM nmid_news WHERE (SELECT id FROM nmid_news ORDER BY id ASC LIMIT (#{page_num}*#{size}), 1 )
+        <if test="sort_by!=null and order!=null">ORDER BY ${sort_by} ${order}</if> LIMIT #{size}
+    </select> -->
+    <select id="getUserNum" resultType="int">
+    	SELECT COUNT(*) FROM nmid_user 
+    </select>
+    
+    <select id="login" resultType="java.lang.Integer">
+    	SELECT id from nmid_user where email = #{email} and password = #{passWord}
+    </select>
+    <select id="getUserById" resultType="UserModel">
+        SELECT * FROM nmid_user WHERE id=#{id}
+    </select>
+    <select id="getUserAuthority" resultType="java.lang.String">
+    	SELECT role FROM nmid_user where id = ${uid}
+    </select>
+    <select id="getUserList" resultMap="listResultMap">
+    SELECT id,name,profile,portrait,platform from nmid_user WHERE     id 
+        <if test='orderBy == "desc"'> &lt;= </if> 
+        <if test='orderBy == "asc"'> &gt;= </if>
+          (SELECT id FROM nmid_user  ORDER BY id ${orderBy} LIMIT #{offset}, 1 )
+         <if test="sortBy!=null and orderBy!=null"> ORDER BY ${sortBy} ${orderBy}</if> LIMIT #{size}
+    	 
+    </select>
+    
+    <insert id="addUser" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+    	insert into nmid_user (id,name,email,password,platform,job,role) values (#{id},#{name},#{email},#{password},#{platform},#{job},#{role})
+    </insert>
+    
+    <update id="changePassWord">
+    	update nmid_user set password = #{new} where id = #{uid} and password=#{old}
+    </update>
+    
+    <delete id="deleteUser">
+    	delete from nmid_user where id = #{uid} 
+    </delete>
+    
+    
+    <resultMap id="listResultMap" type="java.util.HashMap">
+    <result property="id" column="id" javaType="int"/>
+    	<result property="name" column="name"/>
+    	<result property="profile" column="profile"/>
+    	<result property="avatar" column="avatar"/>
+    	
+    </resultMap>
+    
+    
+    
+    
+    
+</mapper>

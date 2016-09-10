@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/jee
+       http://www.springframework.org/schema/jee/spring-jee.xsd">
+
+
+	<!-- JNDI数据源 -->
+	<jee:jndi-lookup id="dataSource" jndi-name="/jdbc/nmid"
+		resource-ref="true" />
+	<!--  <jee:jndi-lookup id="dataSource_back" jndi-name="/jdbc/205"
+		resource-ref="true" />  -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg ref="dataSource" />
+	</bean>
+	
+	<!--  <bean id="jdbcTemplate_back" class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg ref="dataSource_back" />
+	</bean>  -->
+	<!-- 配置sqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:conf/mybatis/mybatis-config.xml"/>
+		<property name="mapperLocations">
+			<array>
+				<value>classpath:conf/mybatis/mapper/*.xml</value>
+			</array>
+		</property>
+		<property name="typeAliasesPackage" value="cqupt.nmid.home.model" />
+	</bean>
+	
+    <!-- 注册映射器 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="cqupt.nmid.home.dao.impl.mybatis" />
+	</bean>
+</beans>

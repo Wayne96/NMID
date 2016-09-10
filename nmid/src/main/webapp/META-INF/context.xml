@@ -1,0 +1,13 @@
+﻿<Context reloadable="true">
+	<!-- <Resource name="/jdbc/nmid" auth="Container" type="javax.sql.DataSource" 
+			  maxActive="100" maxIdle="30" maxWait="10000"
+			  username="root" password="mysql2015NMID" 
+			  driverClassName="com.mysql.jdbc.Driver"
+			  url="jdbc:mysql://202.202.43.205:3306/nmid_home?useUnicode=true&amp;characterEncoding=utf-8"/> -->
+			  
+        <Resource name="/jdbc/nmid" auth="Container" type="javax.sql.DataSource" 
+              maxActive="100" maxIdle="30" maxWait="10000"
+              username="nmid" password="nexuslink" 
+              driverClassName="com.mysql.jdbc.Driver"
+              url="jdbc:mysql://121.42.207.100:3306/nmid_home?useUnicode=true&amp;characterEncoding=utf-8"/>
+</Context>

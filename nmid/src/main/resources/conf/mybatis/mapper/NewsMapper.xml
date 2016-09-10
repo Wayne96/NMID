@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cqupt.nmid.home.dao.impl.mybatis.NewsMapper">
+    <select id="getPublicNews" resultType="java.util.HashMap">
+        SELECT n.id,n.title,n.update_time,n.profile,n.pv,n.illustration FROM nmid_news n WHERE status = 1 and id 
+        <if test='order == "desc"'> &lt;= </if> 
+        <if test='order == "asc"'> &gt;= </if>
+          (SELECT id FROM nmid_news  ORDER BY id ${order} LIMIT #{offset}, 1 )
+         <if test="sort_by!=null and order!=null"> ORDER BY ${sort_by} ${order}</if> LIMIT #{size}
+    </select>
+    
+    <select id="getNewsById" resultMap="newsResultMap">
+    	SELECT id,title,uid,content,profile,update_time,pv,illustration,status from nmid_news where id = #{id} 
+    </select>
+    <select id="getNewsByUser" resultType="java.util.HashMap">
+    	SELECT id,title,uid,profile,update_time,pv,illustration,status FROM nmid_news where uid = #{uid}
+    </select>
+    <select id="getNumOfNews"  resultType="java.lang.Integer">
+    	SELECT COUNT(id) from nmid_news
+    </select>
+    
+   <!--插入返回主键   -->
+    <insert id="addNews" parameterType="News" useGeneratedKeys="true" keyProperty="id" >
+    	 insert into nmid_news (uid,title,content,profile,status,create_time,update_time,id,illustration) values (${uid},#{title},#{content},#{profile},#{status},#{create_time},#{update_time},#{id},#{illustration})
+    </insert>
+   	
+   	<delete id="deleteNews">
+   		 delete from nmid_news where id= #{newsId}
+   	</delete>
+   	
+   	<update id="updateNews">
+   		 update nmid_news set title = #{title},content = #{content},profile = #{profile},update_time=#{update_time},illustration=#{illustration} where id = #{id}
+   		 
+   	</update>
+   	
+    
+    <resultMap id="newsResultMap" type="java.util.HashMap">
+    <result property="id" column="id" javaType="int"/>
+    	<result property="title" column="title"/>
+    	<result property="content" column="content"/>
+    	<result property="profile" column="profile"/>
+    	<result property="update_time" column="update_time"/>
+    	<result property="pv" column="pv"/>
+    	<result property="illustration" column="illustration"/>
+    	
+    	
+    </resultMap>
+</mapper>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cqupt.nmid.home.dao.impl.mybatis.HistoryMapper">
+	<insert id="addHistory" parameterType="History" useGeneratedKeys="true" keyProperty="id">
+		insert into  nmid_home (id,uid,city,ip,time) values ( #{id},#{uid},#{city},#{ip},#{time})
+	</insert>
+	
+	<select id="getHistoryByUser" >
+		select * from nmid_history where uid = #{id}
+	</select>
+	
+</mapper>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cqupt.nmid.home.dao.impl.mybatis.WorkMapper">
+
+	<select id="getPassedWorkList" resultType="Work">
+		SELECT * FROM nmid_work WHERE `is_pass`=1 AND id
+		<if test='order == "desc"'> &lt;= </if>
+		<if test='order == "asc"'> &gt;= </if>
+		(SELECT id FROM nmid_work WHERE `is_pass`=1 ORDER BY id ${order} LIMIT #{offset},1 )
+		<if test="sort_by!=null and order!=null">ORDER BY ${sort_by} ${order}</if>
+		LIMIT #{size}
+	</select>
+	
+	<select id="getUnPassWorkList" resultType="Work">
+        SELECT * FROM nmid_work WHERE `is_pass`=0 AND id
+        <if test='order == "desc"'> &lt;= </if>
+        <if test='order == "asc"'> &gt;= </if>
+        (SELECT id FROM nmid_work WHERE `is_pass`=0 ORDER BY id ${order} LIMIT #{offset},1 )
+        <if test="sort_by!=null and order!=null">ORDER BY ${sort_by} ${order}</if>
+        LIMIT #{size}
+    </select>
+    
+    <select id="getUserWork" resultType="Work">
+        SELECT nmid_work.* FROM nmid_work,nmid_work_author 
+        WHERE work_id=nmid_work.id AND author_id=#{user_id} 
+        <if test="sort_by!=null and order!=null">ORDER BY ${sort_by} ${order}</if>
+        LIMIT #{offset},#{size}
+    </select>
+
+	<select id="getWorkAuthor" resultType="UserBase">
+		SELECT nmid_user.id,nmid_user.name,nmid_user.portrait FROM nmid_work_author,nmid_user WHERE
+		work_id=#{id} AND nmid_user.id=nmid_work_author.author_id
+	</select>
+	
+	<!-- 数量统计 -->
+	<select id="getPassedWorkCount" resultType="int">
+		SELECT COUNT(*) FROM nmid_work WHERE is_pass=1
+	</select>
+   <select id="getUnPassWorkCount" resultType="int">
+        SELECT COUNT(*) FROM nmid_work WHERE is_pass=0
+    </select>
+    <select id="getWorkCountByUser" resultType="int">
+        SELECT COUNT(*) FROM nmid_work,nmid_work_author WHERE work_id=nmid_work.id AND author_id=#{userId} 
+    </select>
+    
+	<select id="getWork" resultType="Work">
+		SELECT * FROM nmid_work WHERE id=#{id}
+	</select>
+	<select id="getHotWorksByUser" resultType="Work">
+		SELECT nmid_work.* FROM nmid_work,nmid_work_author WHERE
+		work_id=nmid_work.id AND author_id=#{id} AND is_pass=1 ORDER BY nmid_work.pv DESC
+		LIMIT #{size}
+	</select>
+	<update id="increaseWorkPv">
+		UPDATE nmid_work SET pv=pv+1 WHERE id=#{id}
+	</update>
+	
+	<update id="updateWork" parameterType="Work">
+	   UPDATE nmid_work
+	   <set>
+	       <if test="name!=null">name=#{name},</if>
+	       <if test="logo!=null">logo=#{logo},</if>
+	       <if test="version!=null">version=#{version},</if>
+	       <if test="size!=0">size=#{size},</if>
+	       <if test="time!=null">time=#{time},</if>
+	       <if test="support!=null">support=#{support},</if>
+	       <if test="profile!=null">profile=#{profile},</if>
+           <if test="utility!=null">utility=#{utility},</if>
+           <if test="feature!=null">feature=#{feature},</if>
+           <if test="illustration!=null">illustration=#{illustration},</if>
+           <if test="instruction!=null">instruction=#{instruction},</if>
+           <if test="links!=null">links=#{links},</if>
+           <if test="isPass!=null">is_pass=#{isPass}</if>
+	   </set>
+	   WHERE `id`=#{id}
+	</update>
+	
+	<delete id="deleteWork" >
+	   DELETE FROM nmid_work WHERE id=#{id}
+	</delete>
+	
+	<insert id="insertWork" parameterType="Work" useGeneratedKeys="true" keyProperty="id">
+	   INSERT INTO 
+	   nmid_work(name,logo,version,size,time,support,profile,utility,feature,instruction,illustration,links) 
+	   VALUES(#{name},#{logo},#{version},#{size},#{time},#{support},#{profile},#{utility},#{feature},#{instruction},#{illustration},#{links});
+	</insert>
+	
+	<insert id="insertWorkAuthors">
+	   INSERT INTO 
+	   nmid_work_author(work_id,author_id)
+	   VALUES
+	   <foreach collection="authors" item="author_id" index="index" separator=",">
+	       (#{work_id},#{author_id})
+	   </foreach>
+	</insert>
+	
+	<delete id="deleteWorkAuthors" >
+	   DELETE FROM nmid_work_author WHERE work_id=#{work_id} AND author_id IN
+	   <foreach collection="authors" item="author_id" index="index" open="(" separator="," close=")">
+	       #{author_id}
+	   </foreach>
+	</delete>
+</mapper>
